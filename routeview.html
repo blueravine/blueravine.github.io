@@ -144,7 +144,7 @@
                                                         : (`select A, SUM(C) where B >= date '${startDate}' group by A order by SUM(C) limit 10`))
                                              : ('select A, SUM(C) group by A order by SUM(C) limit 10'));
 
-    lowcrowdedwrap.setChartType('ScatterChart');
+    lowcrowdedwrap.setChartType('LineChart');
     lowcrowdedwrap.setDataSourceUrl('https://docs.google.com/spreadsheets/d/1-WBtaG4oTf8p0ypzWaKemvsKBH3SjTlaOu5dWGXF2v0/edit?usp=sharing&sheet=RouteView&headers=1');
     lowcrowdedwrap.setContainerId('column_chart_div');
     lowcrowdedwrap.setQuery(lowcrowdedsql);
@@ -163,7 +163,7 @@
                                                         : (`select A, SUM(C) where B >= date '${startDate}' group by A order by SUM(C) desc limit 10`))
                                              : ('select A, SUM(C) group by A order by SUM(C) desc limit 10'));
 
-          topcrowdedwrap.setChartType('BarChart');
+          topcrowdedwrap.setChartType('ColumnChart');
           topcrowdedwrap.setDataSourceUrl('https://docs.google.com/spreadsheets/d/1-WBtaG4oTf8p0ypzWaKemvsKBH3SjTlaOu5dWGXF2v0/edit?usp=sharing&sheet=RouteView&headers=1');
           topcrowdedwrap.setContainerId('pie_chart_div');
           topcrowdedwrap.setQuery(topcrowdedsql);
@@ -229,31 +229,31 @@
         // Send the query with a callback function.
         passengerquery.send(handlePassengerQueryResponse);
 
-        var busyroutequery = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1-WBtaG4oTf8p0ypzWaKemvsKBH3SjTlaOu5dWGXF2v0/edit?usp=sharing&sheet=RouteView&headers=1', opts);
+        // var mostalightedquery = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1-WBtaG4oTf8p0ypzWaKemvsKBH3SjTlaOu5dWGXF2v0/edit?usp=sharing&sheet=RouteView&headers=1', opts);
+
+        // (route && (route !== 'ALL'))
+        //         ? (startDate ? (endDate ? mostalightedquery.setQuery(`select A, MAX(C)  where F = '${route}' and B >= date '${startDate}' and B <= date '${endDate}' group by A order by MAX(C) desc`)
+        //                      : mostalightedquery.setQuery(`select A, MAX(C)  where F = '${route}' and B >= date '${startDate}' group by A order by MAX(C) desc`))
+        //               : mostalightedquery.setQuery(`select A, MAX(C) where F = '${route}' group by A order by MAX(C) desc`))
+        //         : (startDate ? (endDate ? mostalightedquery.setQuery(`select A, MAX(C)  where B >= date '${startDate}' and B <= date '${endDate}' group by A order by MAX(C) desc`)
+        //                      : mostalightedquery.setQuery(`select A, MAX(C)  where B >= date '${startDate}' group by A order by MAX(C) desc`))
+        //               : mostalightedquery.setQuery('select A, MAX(C) group by A order by MAX(C) desc'));
+
+        // // Send the query with a callback function.
+        // mostalightedquery.send(handlemostalightedQueryResponse);
+
+        var mostrevenuequery = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1-WBtaG4oTf8p0ypzWaKemvsKBH3SjTlaOu5dWGXF2v0/edit?usp=sharing&sheet=RouteView&headers=1', opts);
 
         (route && (route !== 'ALL'))
-                ? (startDate ? (endDate ? busyroutequery.setQuery(`select A, MAX(C)  where F = '${route}' and B >= date '${startDate}' and B <= date '${endDate}' group by A order by MAX(C) desc`)
-                             : busyroutequery.setQuery(`select A, MAX(C)  where F = '${route}' and B >= date '${startDate}' group by A order by MAX(C) desc`))
-                      : busyroutequery.setQuery(`select A, MAX(C) where F = '${route}' group by A order by MAX(C) desc`))
-                : (startDate ? (endDate ? busyroutequery.setQuery(`select A, MAX(C)  where B >= date '${startDate}' and B <= date '${endDate}' group by A order by MAX(C) desc`)
-                             : busyroutequery.setQuery(`select A, MAX(C)  where B >= date '${startDate}' group by A order by MAX(C) desc`))
-                      : busyroutequery.setQuery('select A, MAX(C) group by A order by MAX(C) desc'));
+                ? (startDate ? (endDate ? mostrevenuequery.setQuery(`select A, MAX(E) where A = '${route}' and B >= date '${startDate}' and B <= date '${endDate}' group by A order by MAX(E) desc limit 1`)
+                             : mostrevenuequery.setQuery(`select A, MAX(E) where A = '${route}' and B >= date '${startDate}' group by A order by MAX(E) desc limit 1`))
+                      : mostrevenuequery.setQuery(`select A, MAX(E) where A = '${route}' group by A order by MAX(E) desc limit 1`))
+                : (startDate ? (endDate ? mostrevenuequery.setQuery(`select A, MAX(E) where B >= date '${startDate}' and B <= date '${endDate}' group by A order by MAX(E) desc limit 1`)
+                             : mostrevenuequery.setQuery(`select A, MAX(E) where B >= date '${startDate}' group by A order by MAX(E) desc limit 1`))
+                     : mostrevenuequery.setQuery('select A, MAX(E) group by A order by MAX(E) desc limit 1'));
 
         // Send the query with a callback function.
-        busyroutequery.send(handleBusyRouteQueryResponse);
-
-        var revenueroutequery = new google.visualization.Query('https://docs.google.com/spreadsheets/d/1-WBtaG4oTf8p0ypzWaKemvsKBH3SjTlaOu5dWGXF2v0/edit?usp=sharing&sheet=RouteView&headers=1', opts);
-
-        (route && (route !== 'ALL'))
-                ? (startDate ? (endDate ? revenueroutequery.setQuery(`select A, MAX(E) where F = '${route}' and B >= date '${startDate}' and B <= date '${endDate}' group by A order by MAX(E) desc limit 1`)
-                             : revenueroutequery.setQuery(`select A, MAX(E) where F = '${route}' and B >= date '${startDate}' group by A order by MAX(E) desc limit 1`))
-                      : revenueroutequery.setQuery(`select A, MAX(E) where F = '${route}' group by A order by MAX(E) desc limit 1`))
-                : (startDate ? (endDate ? revenueroutequery.setQuery(`select A, MAX(E) where B >= date '${startDate}' and B <= date '${endDate}' group by A order by MAX(E) desc limit 1`)
-                             : revenueroutequery.setQuery(`select A, MAX(E) where B >= date '${startDate}' group by A order by MAX(E) desc limit 1`))
-                     : revenueroutequery.setQuery('select A, MAX(E) group by A order by MAX(E) desc limit 1'));
-
-        // Send the query with a callback function.
-        revenueroutequery.send(handleRevenueRouteQueryResponse);
+        mostrevenuequery.send(handlemostrevenueQueryResponse);
 
       }
 
@@ -320,56 +320,56 @@
         }
     }
 
-      function handleBusyRouteQueryResponse(response) {
+      // function handlemostalightedQueryResponse(response) {
+
+      //     if (response.isError()) {
+      //       alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
+      //       return;
+      //     }
+      //     var mostalightedoptions = {'title':'Bus Utilization',
+      //                   'width':250,
+      //                   'height':200};
+
+      //     var mostalighteddata = response.getDataTable();
+
+      //   try {
+      //     document.getElementById('most_alighted_route').innerHTML = mostalighteddata.getValue(0,0);
+      //   }
+      //   catch(err) {
+      //     switch (err.message) {
+      //       case 'Table has no rows.' :
+      //             document.getElementById('most_alighted_route').innerHTML = 0  + '/-<br><span style="font-size:18"}>(No data for selected date)</span>';
+      //             break;
+      //       default :
+      //             document.getElementById('most_alighted_route').innerHTML = 0;
+      //     }
+      //   }
+
+      // }
+
+      function handlemostrevenueQueryResponse(response) {
 
           if (response.isError()) {
             alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
             return;
           }
-          var busyrouteoptions = {'title':'Bus Utilization',
+          var mostrevenueoptions = {'title':'Bus Utilization',
                         'width':250,
                         'height':200};
 
-          var busyroutedata = response.getDataTable();
+          var mostrevenuedata = response.getDataTable();
 
         try {
-          document.getElementById('most_alighted_route').innerHTML = busyroutedata.getValue(0,0);
+          document.getElementById('most_revenue_route').innerHTML = '&#8377;' + numberWithCommas(mostrevenuedata.getValue(0,1))
+           + '/-<br><span style="font-size:1vw"}>(Route : ' + mostrevenuedata.getValue(0,0) + ')</span>';
         }
         catch(err) {
           switch (err.message) {
             case 'Table has no rows.' :
-                  document.getElementById('most_alighted_route').innerHTML = 0  + '/-<br><span style="font-size:18"}>(No data for selected date)</span>';
+                  document.getElementById('most_revenue_route').innerHTML = 0  + '/-<br><span style="font-size:18"}>(No data for selected date)</span>';
                   break;
             default :
-                  document.getElementById('most_alighted_route').innerHTML = 0;
-          }
-        }
-
-      }
-
-      function handleRevenueRouteQueryResponse(response) {
-
-          if (response.isError()) {
-            alert('Error in query: ' + response.getMessage() + ' ' + response.getDetailedMessage());
-            return;
-          }
-          var revenuerouteoptions = {'title':'Bus Utilization',
-                        'width':250,
-                        'height':200};
-
-          var revenueroutedata = response.getDataTable();
-
-        try {
-          document.getElementById('most_boarded_route').innerHTML = revenueroutedata.getValue(0,1)
-           + '<br><span style="font-size:1vw"}>(Route : ' + revenueroutedata.getValue(0,0) + ')</span>';
-        }
-        catch(err) {
-          switch (err.message) {
-            case 'Table has no rows.' :
-                  document.getElementById('most_boarded_route').innerHTML = 0  + '/-<br><span style="font-size:18"}>(No data for selected date)</span>';
-                  break;
-            default :
-                  document.getElementById('most_boarded_route').innerHTML = 0;
+                  document.getElementById('most_revenue_route').innerHTML = 0;
           }
         }
 
@@ -433,8 +433,8 @@
 <div class="main-container" id="main-container-id">
       <div class="navbar">
           <a href="googlecharts.html"><i class="fa fa-home"></i>   HOME</a>
-          <a href="stopview.html"><i class="fas fa-map-pin"></i>   BUS STOP</a>
           <a href="routeview.html" class="active-page"><i class="fas fa-route"></i>   ROUTE</a>
+          <a href="stopview.html"><i class="fas fa-map-pin"></i>   BUS STOP</a>
           <a href="rawdata.html"><i class="fas fa-table"></i>   RAWDATA</a>
         </div>
       <div class="header-container" id="header-continer-id">
@@ -1487,12 +1487,6 @@
                   <div class="summary-card" style="--summarybgcolor: rgb(255, 0, 200); --summarytextcolor: white">
                       <img src="TSRTC_LOGO.png" width="60%" height="100%"/>
                   </div>
-                  <div class="summary-card" style="--summarybgcolor: rgb(185, 44, 86); --summarytextcolor: white">
-                    <div id="most_crowded_route_div">
-                      <p id="most_crowded_route_title">MOST CROWDED ROUTE<br><br>
-                        <span id="most_crowded_route" class="summary_metric">calculating...</span></p>
-                    </div>
-                  </div>
                   <div class="summary-card" style="--summarybgcolor: rgb(3, 88, 109); --summarytextcolor: white">
                     <div id="total_passengers_div">
                       <p id="total_passengers_title">TOTAL PASSENGERS<br><br>
@@ -1503,18 +1497,18 @@
                       <img class="chart-text" src="TSRTC's_Metro_Deluxe_Bus.jpg" height=100% width=100%/>
                     </div>
                         <div class="summary-card" style="--summarybgcolor: greenyellow; --summarytextcolor: black">
-                    <div id="most_boarded_route_div">
-                      <p id="most_boarded_route_title">MOST BOARDED ROUTE<br><br>
-                        <span id="most_boarded_route" class="summary_metric">calculating...</span></p><br><br>
+                    <div id="most_revenue_route_div">
+                      <p id="most_revenue_route_title">MOST REVENUE ROUTE<br><br>
+                        <span id="most_revenue_route" class="summary_metric">calculating...</span></p><br><br>
                     </div>
                   </div>
-                  <div class="summary-card" style="--summarybgcolor: rgb(124, 30, 93); --summarytextcolor: white">
-                      <div id="most_alighted_route_div">
-                        <p id="most_alighted_route_title">MOST ALIGHTED ROUTE<br><br>
-                          <span id="most_alighted_route" class="summary_metric">calculating...</span></p><br><br>
+                  <div class="summary-card" style="--summarybgcolor: rgb(185, 44, 86); --summarytextcolor: white">
+                      <div id="most_crowded_route_div">
+                        <p id="most_crowded_route_title">MOST CROWDED ROUTE<br><br>
+                          <span id="most_crowded_route" class="summary_metric">calculating...</span></p>
                       </div>
-                  </div>
-            </div>
+                    </div>
+              </div>
             <div class="charts-container">
                 <div class="charts-row">
                   <div class="charts-card">
@@ -1522,7 +1516,7 @@
                     <p id="chart-text-id">
                       <!-- <H1>Welcome to operational metrics dashboard!</H1> -->
                       <!-- <H4>This dashboard summarizes metrics at city level, or individual route level of Hyderabad city buses of TSRTC.</H4> -->
-                      <p>Navigation information for this dashboard:</p>
+                      <p>Dashboard information:</p>
                           <ol>
                             <li><H4>ROUTE: <span>In this page two levels of data filters available.</span></H4></li>
                                 <ul>
