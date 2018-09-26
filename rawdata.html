@@ -8,6 +8,7 @@
     <script>
       var dashboardDate;
       var prevbutton = 'date_today';
+      const weekday=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
       var selectedRange = new Date();
       var startDateString = '';
@@ -31,11 +32,17 @@
         document.getElementById(div_id).style.backgroundColor = '#2eacde';
         document.getElementById(div_id).style.color = 'white';
 
-        // let selectedRange = new Date();
+        let selectedRange = new Date();
         // let startDateString = '';
         // let endDateString = '';
 
         switch(dateRange) {
+          case 'dtprevweekday':
+                selectedRange.setDate(selectedRange.getDate() - 7);
+                startDateString = selectedRange.toISOString().slice(0,10);
+                endDateString = selectedRange.toISOString().slice(0,10);
+                hideCustomDates();
+                break;
           case 'dttoday':
                 startDateString = selectedRange.toISOString().slice(0,10);
                 endDateString = selectedRange.toISOString().slice(0,10);
@@ -129,6 +136,11 @@
         // document.getElementById('selected_date_range').innerHTML = 'Data since "' + initialStartDateString + '" until "' + initialEndDateString + '"';
         document.getElementById('selected-start-label-id').innerHTML = 'Showing data between Start Date: ' + startDateString;
         document.getElementById('selected-end-label-id').innerHTML = 'End Date: ' + endDateString;
+
+        selectedRange = new Date();
+        selectedRange.setDate(selectedRange.getDate() - 7);
+
+        document.getElementById('prevweekday').innerHTML=weekday[selectedRange.getDay()];
 
         initialize(startDateString, endDateString, selectedrouteString, selectedStopString);
       }
@@ -1513,6 +1525,7 @@
             </div>
 
             <div class="btn-group">
+                <button id="date_prevweekday" class="date-button" onclick="setDashboardDate('dtprevweekday','date_prevweekday')">Last&nbsp;<span id="prevweekday"></span></button>
                 <button id="date_today" class="date-button" onclick="setDashboardDate('dttoday','date_today')"><span>Today</span></button>
                 <button id="date_thisweek" class="date-button" onclick="setDashboardDate('dtthisweek','date_thisweek')"><span>Past 7 Days</span></button>
                 <button id="date_thismonth" class="date-button" onclick="setDashboardDate('dtthismonth','date_thismonth')"><span>Past 30 days</span></button>
